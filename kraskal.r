@@ -29,6 +29,9 @@ kraskal <- function(mat){
     adcomps <- append(adcomps, i)
   }
   
+  # Создание базы для матрицы смежности (матрица из нулей)
+  adjm <- matrix(0, ncol = N, nrow = N)
+  
   # Рассмотрение разных рёбер (Итерирование по mat)
   for (i in 1:nrow(mat)) {
     
@@ -56,20 +59,23 @@ kraskal <- function(mat){
       if (comp1 != comp2) {
         adcomps[[comp1]] <- union(adcomps[[comp1]], adcomps[[comp2]])
         adcomps[[comp2]] <- NULL
+        
+        # Создание матрицы смежности
         cat("Добавляем ребро", node1, "-", node2, "\n")
+        adjm[node1, node2] <- mat[i, 3]
+        adjm[node2, node1] <- mat[i, 3]
       }
       
       # Иначе (если они находятся в одной компоненте связности), то ничего не делаем
       
     }
     else{
-      return(adcomps[[1]])
+      return(adjm)
     }
   }
 }
 
 
 result <- kraskal(sorted_mat)
-
-cat('Минимальное остовное дерево(MST - minimum spanning tree):', result)
-
+print('Результат:')
+print(result)
